@@ -1,3 +1,4 @@
+This is an exploratory project looking at COVID statistics in 2020 - 2021
 
 -- Altering new_cases data type
 
