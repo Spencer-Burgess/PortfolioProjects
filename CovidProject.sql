@@ -21,7 +21,7 @@ WHERE location LIKE '%states%' AND continent is NOT NULL
 ORDER BY location, date
 
 
--- Total Cases vs Population
+-- Total Cases vs Population, this gives us a percentage of the total population that has had a case of COVID.
 
 SELECT location, date, population, total_cases, (CAST(total_cases as numeric))/(Cast(population as numeric))*100 as PopulationPercentage
 FROM PortfolioProject1..CovidDeaths
@@ -29,7 +29,7 @@ WHERE continent is NOT NULL
 ORDER BY location, date
 
 
--- Countries with highest infection rate compared to population
+-- Countries with highest infection rate compared to population, listed as percentages.
 
 SELECT location, population, MAX(total_cases) AS HighestInfectionCount, MAX(CAST(total_cases as numeric))/(Cast(population as numeric))*100 as PopulationInfectionPercentage
 FROM PortfolioProject1..CovidDeaths
@@ -63,7 +63,7 @@ FROM PortfolioProject1..CovidDeaths
 WHERE continent is NOT NULL
 
 
--- Join the tables, Total Population vs Vaccinations
+-- Join the tables (CovidDeaths and CovidVaccinations), Total Population vs Vaccinations
 
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations,
 SUM(cast(vac.new_vaccinations as int)) OVER (PARTITION BY dea.location ORDER BY dea.location, dea.date) AS RollingVaccinationTotal
@@ -93,7 +93,7 @@ SELECT *, (RollingPeopleVaccinated/Population)*100 AS RollingPercentage
 FROM PopVac
 
 
--- Creating a temp table
+-- Creating a temp table so that I can perform calculations off of a specified subset of the entire table, DROP TABLE IF EXISTS ensures that I don't try to make additional temp tables when making edits.
 
 DROP TABLE IF EXISTS #PercentPopulationVaccinated
 CREATE TABLE #PercentPopulationVaccinated
@@ -120,7 +120,7 @@ SELECT *, (RollingPeopleVaccinated/Population)*100 AS RollingPercentage
 FROM #PercentPopulationVaccinated
 
 
--- Creating Views to use for visualizations
+-- Creating Views to use for visualizations (The first being the percentage of the population being vaccinated over time, the second being the percentage of people who die after contracting COVID, and the third showing the countries with the highest infection rate as a percentage).
 
 CREATE VIEW PercentPopulationVaccinated AS
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations,
